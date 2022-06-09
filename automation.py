@@ -6,6 +6,16 @@ import os.path
 import datetime
 import time
 import csv
+import sys
+
+# Gets absolute path to resource
+def resource_path(relative_path):
+    try:
+        # PyInstaller creates a temp folder and stores path in _MEIPASS
+        base_path = sys._MEIPASS
+    except Exception:
+        base_path = os.path.abspath('.')
+    return os.path.join(base_path, relative_path)
 
 # CSV FILE CREATION
 date = datetime.datetime.now()
@@ -21,7 +31,6 @@ driver = webdriver.Chrome()
 driver.get('https://tealprod.tea.state.tx.us/TSP/TEASecurePortal/Access/LogonServlet')
 
 load_dotenv()
-EMAIL = os.getenv('EMAIL')
 USERNAME = os.getenv('UNAME')
 PASSWORD = os.getenv('PASSWORD')
 
@@ -75,7 +84,7 @@ for contents in ddContents.options:
     # print('\n')
 
     filewriter.writerow([campusName, count1, count2, count3, count4])
-
+    
     count = count + 1
 
 csvfile.close()
