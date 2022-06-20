@@ -6,7 +6,13 @@ into a .csv file. Previously, the data had to have been manually recorded into a
 to complete. With this program, it cuts the time down to around 1 minute and 15 seconds to gather over 50 campuses worth
 of data.
 
-Current run-time: 1:16.37
+**Version 1.1**
+
+Includes campuses by region in order to easily sort or group elements in excel.
+
+v1.0 run-time: 1:16.37
+
+v1.1 run-time: NA
 
 ---
 

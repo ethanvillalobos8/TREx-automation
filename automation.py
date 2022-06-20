@@ -6,25 +6,17 @@ import os.path
 import datetime
 import time
 import csv
-import sys
-
-# Gets absolute path to resource
-def resource_path(relative_path):
-    try:
-        # PyInstaller creates a temp folder and stores path in _MEIPASS
-        base_path = sys._MEIPASS
-    except Exception:
-        base_path = os.path.abspath('.')
-    return os.path.join(base_path, relative_path)
+import numpy as np
 
 # CSV FILE CREATION
 date = datetime.datetime.now()
 date = date.strftime("%m-%d-%y_%H-%M-%S")
 save_path = r'C:\Users\ethan\ideapublicschools.org\Student Information Systems - TREx Audit'
-fileName = save_path + '\TREx Audit_' + date + '.csv'
-csvfile = open(fileName,'w', newline = '\n')                                                                                                              
+filePath = save_path + '\TREx Audit_' + date + '.csv'
+fileName = '\TREx Audit_' + date + '.csv'
+csvfile = open(filePath,'w', newline = '\n')                                                                                                              
 filewriter = csv.writer(csvfile, delimiter=',',quotechar='|', quoting=csv.QUOTE_MINIMAL)
-filewriter.writerow(['Campus', 'Inbound Requests', 'Inbound Records & Transfers', 'Rejected Outbound Requests', 'Rejected Outbound Records & Transfers'])
+filewriter.writerow(['Region', 'Campus', 'Inbound Requests', 'Inbound Records & Transfers', 'Rejected Outbound Requests', 'Rejected Outbound Records & Transfers'])
 
 # Establish Chrome webdriver
 driver = webdriver.Chrome()
@@ -33,8 +25,6 @@ driver.get('https://tealprod.tea.state.tx.us/TSP/TEASecurePortal/Access/LogonSer
 load_dotenv()
 USERNAME = os.getenv('UNAME')
 PASSWORD = os.getenv('PASSWORD')
-
-print(USERNAME, PASSWORD)
 
 # Enter username and password
 username = driver.find_element_by_xpath('//*[@id="username"]')
@@ -54,6 +44,170 @@ driver.get('https://tealprod.tea.state.tx.us/TSP/TEASecurePortal/Access/Applicat
 
 ddContents = driver.find_element_by_xpath('//*[@id="ie_width_hack"]/div[1]/div/div/select')
 ddContents = Select(ddContents)
+
+# Texas Regions
+regions = [
+    'AUSTIN', 
+    'EL PASO', 
+    'GREATER HOUSTON', 
+    'PERMIAN BASIN', 
+    'RGV-LOWER', 
+    'RGV-UPPER', 
+    'SAN ANTONIO', 
+    'TARRANT COUNTY'
+]
+
+# Region Campuses
+austin = [
+    'IDEA BLUFF SPRINGS ACADEMY',
+    'IDEA BLUFF SPRINGS COLLEGE PREPARATORY', 
+    'IDEA HEALTH PROFESSIONS ACADEMY', 
+    'IDEA HEALTH PROFESSIONS COLLEGE PREPARATORY',
+    'IDEA KYLE ACADEMY',
+    'IDEA KYLE COLLEGE PREPARATORY',
+    'IDEA MONTOPOLIS ACADEMY',
+    'IDEA MONTOPOLIS COLLEGE PREPARATORY',
+    'IDEA PARMER PARK ACADEMY',
+    'IDEA PARMER PARK COLLEGE PREPARATORY',
+    'IDEA PFLUGERVILLE ACADEMY',
+    'IDEA PFLUGERVILLE COLLEGE PREPARATORY',
+    'IDEA ROUND ROCK TECH ACADEMY',
+    'IDEA ROUND ROCK TECH COLLEGE PREPARATORY',
+    'IDEA RUNDBERG ACADEMY',
+    'IDEA RUNDBERG COLLEGE PREPARATORY'
+]
+el_paso = [
+    'IDEA EDGEMERE ACADEMY',
+    'IDEA EDGEMERE COLLEGE PREPARATORY',
+    'IDEA HORIZON VISTA ACADEMY',
+    'IDEA HORIZON VISTA COLLEGE PREPARATORY',
+    'IDEA MESA HILLS ACADEMY',
+    'IDEA MESA HILLS COLLEGE PREPARATORY',
+    'IDEA MESQUITE HILLS ACADEMY',
+    'IDEA MESQUITE HILLS COLLEGE PREPARATORY',
+    'IDEA RIO VISTA ACADEMY',
+    'IDEA RIO VISTA COLLEGE PREPARATORY'
+]
+greater_houston = [
+    'IDEA HARDY ACADEMY',
+    'IDEA HARDY COLLEGE PREPARATORY',
+    'IDEA LAKE HOUSTON ACADEMY',
+    'IDEA LAKE HOUSTON COLLEGE PREPARATORY',
+    'IDEA SPEARS ACADEMY',
+    'IDEA SPEARS COLLEGE PREPARATORY'
+]
+permian_basin = [
+    'IDEA YUKON ACADEMY',
+    'IDEA YUKON COLLEGE PREPARATORY'
+]
+rgv_lower = [
+    'IDEA ACADEMY ALAMO',
+    'IDEA COLLEGE PREPARATORY ALAMO',
+    'IDEA BROWNSVILLE ACADEMY',
+    'IDEA BROWNSVILLE COLLEGE PREPARATORY',
+    'IDEA ELSA ACADEMY',
+    'IDEA ELSA COLLEGE PREPARATORY',
+    'IDEA FRONTIER ACADEMY',
+    'IDEA FRONTIER COLLEGE PREPARATORY',
+    'IDEA HARLINGEN ACADEMY',
+    'IDEA HARLINGEN COLLEGE PREPARATORY',
+    'IDEA RIVERVIEW ACADEMY',
+    'IDEA RIVERVIEW COLLEGE PREPARATORY',
+    'IDEA ROBINDALE ACADEMY',
+    'IDEA ROBINDALE COLLEGE PREPARATORY',
+    'IDEA ACADEMY SAN BENITO',
+    'IDEA COLLEGE PREPARATORY SAN BENITO',
+    'IDEA SPORTS PARK ACADEMY',   
+    'IDEA SPORTS PARK COLLEGE PREPARATORY',
+    'IDEA ACADEMY WESLACO',
+    'IDEA COLLEGE PREP WESLACO',
+    'IDEA WESLACO PIKE ACADEMY',
+    'IDEA WESLACO PIKE COLLEGE PREPARATORY'
+]
+rgv_upper = [
+    'IDEA ACADEMY',
+    'IDEA COLLEGE PREP',
+    'IDEA EDINBURG ACADEMY',
+    'IDEA EDINBURG COLLEGE PREPARATORY',
+    'IDEA LA JOYA ACADEMY',
+    'IDEA LA JOYA COLLEGE PREPARATORY',
+    'IDEA LOS ENCINOS ACADEMY',
+    'IDEA LOS ENCINOS COLLEGE PREPARATORY',
+    'IDEA MCALLEN ACADEMY',
+    'IDEA MCALLEN COLLEGE PREPARATORY',
+    'IDEA ACADEMY MISSION',
+    'IDEA COLLEGE PREPARATORY MISSION',
+    'IDEA NORTH MISSION ACADEMY',
+    'IDEA NORTH MISSION COLLEGE PREPARATORY',
+    'IDEA OWASSA ACADEMY',
+    'IDEA OWASSA COLLEGE PREPARATORY',
+    'IDEA PALMVIEW ACADEMY',
+    'IDEA PALMVIEW COLLEGE PREPARATORY',
+    'IDEA ACADEMY PHARR',
+    'IDEA COLLEGE PREPARATORY PHARR',
+    'IDEA QUEST ACADEMY',
+    'IDEA QUEST COLLEGE PREPARATORY',
+    'IDEA RIO GRANDE CITY ACADEMY',
+    'IDEA RIO GRANDE CITY COLLEGE PREPARATORY',
+    'IDEA ACADEMY SAN JUAN',
+    'IDEA COLLEGE PREPARATORY SAN JUAN',
+    'IDEA TOROS COLLEGE PREPARATORY',
+    'IDEA TRES LAGOS ACADEMY',
+    'IDEA TRES LAGOS COLLEGE PREPARATORY'
+]
+san_antonio = [
+    'IDEA AMBER CREEK ACADEMY',
+    'IDEA AMBER CREEK COLLEGE PREPARATORY',
+    'IDEA BRACKENRIDGE ACADEMY',
+    'IDEA BRACKENRIDGE COLLEGE PREPARATORY',
+    'IDEA BURKE ACADEMY',
+    'IDEA BURKE COLLEGE PREPARATORY',
+    'IDEA CARVER ACADEMY',
+    'IDEA CARVER COLLEGE PREPARATORY',
+    'IDEA CONVERSE ACADEMY',
+    'IDEA CONVERSE COLLEGE PREPARATORY',
+    'IDEA EASTSIDE ACADEMY',
+    'IDEA EASTSIDE COLLEGE PREPARATORY',
+    'IDEA EWING HALSELL ACADEMY',
+    'IDEA EWING HALSELL COLLEGE PREPARATORY',
+    'IDEA HIDDEN MEADOW ACADEMY',
+    'IDEA HIDDEN MEADOW COLLEGE PREPARATORY',
+    'IDEA INGRAM HILLS ACADEMY',
+    'IDEA INGRAM HILLS COLLEGE PREPARATORY',
+    'IDEA JUDSON ACADEMY',
+    'IDEA JUDSON COLLEGE PREPARATORY',
+    'IDEA MAYS ACADEMY',
+    'IDEA MAYS COLLEGE PREPARATORY',
+    'IDEA MONTERREY PARK ACADEMY',
+    'IDEA MONTERREY PARK COLLEGE PREPARATORY',
+    'IDEA NAJIM ACADEMY',
+    'IDEA NAJIM COLLEGE PREPARATORY',
+    'IDEA SOUTH FLORES ACADEMY',
+    'IDEA SOUTH FLORES COLLEGE PREPARATORY',
+    'IDEA WALZEM ACADEMY',
+    'IDEA WALZEM COLLEGE PREPARATORY'
+]
+tarrant_county = [
+    'IDEA ACHIEVE ACADEMY',
+    'IDEA ACHIEVE COLLEGE PREPARATORY',
+    'IDEA EDGECLIFF ACADEMY',
+    'IDEA EDGECLIFF COLLEGE PREPARATORY',
+    'IDEA RISE ACADEMY',
+    'IDEA RISE COLLEGE PREPARATORY',
+    'IDEA SOUTHEAST ACADEMY',
+    'IDEA SOUTHEAST COLLEGE PREPARATORY'
+]
+
+# Array of regions
+region_campus = np.array([
+    austin, 
+    el_paso, 
+    greater_houston, 
+    permian_basin, 
+    rgv_lower, rgv_upper, 
+    san_antonio, 
+    tarrant_county
+])
 
 # Iterate over dropdown contents and print results
 count = 1
@@ -76,16 +230,21 @@ for contents in ddContents.options:
     rejectedOutRecTran = driver.find_element_by_xpath('//*[@id="ie_width_hack"]/div[3]/div/div[2]/div[1]/table/tbody/tr[4]')
     count4 = rejectedOutRecTran.find_element_by_class_name('count').get_attribute('innerHTML')
 
-    arr = [count1, count2, count3, count4]
-
     # Prints to console for testing purposes
+    # arr = [count1, count2, count3, count4]
     # print(campusName)
     # print(arr)
     # print('\n')
 
-    filewriter.writerow([campusName, count1, count2, count3, count4])
+    for region in range(8):
+        if campusName in region_campus[region]:
+            filewriter.writerow([regions[region], campusName, count1, count2, count3, count4])
+            break
+        elif campusName not in region_campus[0] and campusName not in region_campus[1] and campusName not in region_campus[2] and campusName not in region_campus[3] and campusName not in region_campus[4] and campusName not in region_campus[5] and campusName not in region_campus[6] and campusName not in region_campus[7]:
+            filewriter.writerow(['NA', campusName, count1, count2, count3, count4])
+            break
     
     count = count + 1
 
 csvfile.close()
-driver.close()
+driver.close() 
